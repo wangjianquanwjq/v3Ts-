@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%;height:100vh" id="container"></div>
-  <Drawer />
+  <!-- <Drawer /> -->
 </template>
 
 <script lang="ts" setup>
@@ -11,6 +11,8 @@ import { createSocket } from "@/utils/WebSocket";
 let data = [
   [102.54, 30.05, { type: 1 }],
   [103.54, 30.95, { type: 2 }],
+  [105.54, 30.95, { type: 2 }],
+  [104.54, 30.95, { type: 2 }],
   [104.54, 31.05, { type: 1 }]
 ]
 let icon = new AMap.Icon({
@@ -29,12 +31,14 @@ let icon1 = new AMap.Icon({
 let lnglats = [
   [102.54, 30.05],
   [103.54, 30.95],
-  [104.54, 31.05]
+  [104.54, 31.05],
+  [105.54, 30.95],
+  [104.54, 30.95],
 ];
 //初始化地图
 const mapInit = () => {
   var map = new AMap.Map("container", {
-    zoom: 3.9, //初始化地图级别
+    // zoom: 3.9, //初始化地图级别
     resizeEnable: true,
     mapStyle: "amap://styles/fcfe27bbf3be954fccb642c86081a123",//地图的背景颜色
     // center: [105.34, 36.312316],
@@ -74,16 +78,4 @@ onMounted(() => {
 });
 </script>
 <style lang="less">
-.custom-content-marker {
-  position: relative;
-  width: 80px;
-  height: 40px;
-  background: url('https://img1.baidu.com/it/u=724179003,4096104503&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1661360400&t=2a889b9037b484d3de8adfe5c66b3e28');
-  background-size: 100% 100%;
-}
-
-.custom-content-marker img {
-  width: 100%;
-  height: 100%;
-}
 </style>

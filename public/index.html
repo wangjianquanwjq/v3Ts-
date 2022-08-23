@@ -7,6 +7,111 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <title><%= htmlWebpackPlugin.options.title %></title>
+  <style>
+    .first-loading {
+      width: 100vw;
+      height: 100vh;
+      background: no-repeat url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2020-09-25%2F5f6da8cb67087.jpg&refer=http%3A%2F%2Fpic1.win4000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663838029&t=33aa1cd1ba2469bb5651c0c3369713f5");
+      overflow: hidden;
+      color: #FFF;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .load-introduce {
+      margin: 200px auto;
+      text-align: center;
+      font-size: 50px;
+      padding: 0 70px;
+    }
+
+    .load-animate {
+      height: 100vh;
+      width: 100wh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-style: italic;
+      letter-spacing: 5px;
+      font-size: 25px;
+      /* position: fixed;
+      top: 65%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-style: italic;
+      letter-spacing: 5px;
+      display: flex;
+      font-size: 25px;
+      justify-content: center; */
+    }
+
+    .load-ul {
+      margin-top: 15px;
+      list-style: none;
+      display: flex;
+      justify-content: center;
+    }
+
+    .load-li {
+      margin-left: 10px;
+      height: 15px;
+      width: 15px;
+      background-color: #FFF;
+      border-radius: 100%;
+      display: inline-block;
+      -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+      animation: bouncedelay 1.4s infinite ease-in-out;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+    }
+
+    .load-li:nth-of-type(1) {
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    .load-li:nth-of-type(2) {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
+    .load-introduce::after {}
+
+    @-webkit-keyframes introduce-show {
+      0% {}
+    }
+
+    @-webkit-keyframes bouncedelay {
+
+      0%,
+      80%,
+      100% {
+        -webkit-transform: scale(0.0)
+      }
+
+      40% {
+        -webkit-transform: scale(1.0)
+      }
+    }
+
+    @keyframes bouncedelay {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+      }
+
+      40% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -17,9 +122,68 @@
   </script>
   <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.9&key=94ddf4a9c86ace952d68fb2cf477b720">
   </script>
+  <script >
+   
+    let animateTimer;
+    // 创建loading的盒子
+    function loadingBox() {
+      const html = document.documentElement
+      const loadBox = document.createElement("div");
+      loadBox.className = "first-loading"
+      html.appendChild(loadBox);
+    }
 
+    // 创建介绍的盒子
+    function introBox() {
+      const loadBox = document.querySelector(".first-loading")
+      const introBox = document.createElement("div");
+      introBox.className = "load-introduce"
+      introBox.innerText = "qq";
+      loadBox.appendChild(introBox);
+    }
+
+    // 创建动画盒子
+    function animateBox() {
+      const loadBox = document.querySelector(".first-loading")
+      const loadAnimate = document.createElement("div");
+      loadAnimate.className = "load-animate";
+      loadAnimate.innerText = "loading";
+      const ul = document.createElement("ul");
+      ul.className = "load-ul";
+      [1, 2, 3].forEach(item => {
+        const li = document.createElement("li");
+        li.className = "load-li";
+        ul.appendChild(li);
+      })
+      loadAnimate.appendChild(ul);
+      loadBox.appendChild(loadAnimate);
+    }
+
+    // 改变introduce的内容
+    function changeIntro() {
+      const list = [
+        "qq",
+        "ww",
+        "ee"
+      ]
+      let index = 0;
+      animateTimer = setInterval(() => {
+        console.log(12);
+        if (index === 2) {
+          index = 0;
+        } else {
+          index++;
+        }
+        const intro = document.querySelector(".load-introduce");
+        if (intro) intro.innerText = list[index];
+      }, 2000);
+    }
+    loadingBox();
+    // introBox();
+    animateBox();
+    // changeIntro();
+ </script>
   <div id="app"></div>
-  <!-- built files will be auto injected -->
 </body>
 
 </html>

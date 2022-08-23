@@ -1,11 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import homeMap from '../views/homeMap.vue'
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: homeMap
+    component: () => import(/* webpackChunkName: "about" */ '../views/homeMap.vue')
   },
   {
     path: '/audio',
