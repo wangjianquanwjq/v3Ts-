@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.9&key=906557a8e4cb989ccf9237666b531fb5"></script> 
 
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: '0f002dbfcadb0c6e33ee58e9b2a56688',
+    }
+  </script>
+  <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.9&key=94ddf4a9c86ace952d68fb2cf477b720">
+  </script>
+
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
