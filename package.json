@@ -9,6 +9,7 @@
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@jiaminghi/data-view": "^2.10.0",
+    "animate.css": "^4.1.1",
     "core-js": "^3.8.3",
     "element-plus": "^2.2.14",
     "vue": "^3.2.13",

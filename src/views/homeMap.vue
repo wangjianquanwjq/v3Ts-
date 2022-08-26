@@ -1,16 +1,22 @@
 <template>
 
   <div style="width:100%;height:100vh" id="container">
-    <vue-danmaku v-model:danmus="danmus" ref="danmakuRef" use-slot loop :fontSize="50" extraStyle="color:red"
+    <div class="titleBox">
+      <div class="title" @click="aaaaa">
+        劳资是天下第一大屏
+      </div>
+    </div>
+    <Drawer :show='show' />
+    <!-- 弹幕 -->
+    <!-- <vue-danmaku v-model:danmus="danmus" ref="danmakuRef" use-slot loop :fontSize="50" extraStyle="color:red"
       style="height:100vh; width:100wh">
       <template slot="dm" v-slot:dm="{ index, danmu }">
         <div>
           <el-avatar :src="danmu.avatar"> </el-avatar>{{ danmu.text }}
         </div>
       </template>
-    </vue-danmaku>
+    </vue-danmaku> -->
   </div>
-  <!-- <Drawer /> -->
 
 </template>
 
@@ -20,12 +26,16 @@ import { onMounted, ref, reactive, defineComponent } from 'vue'
 import Drawer from "@/components/Drawer.vue";
 import { createSocket } from "@/utils/WebSocket";
 import vueDanmaku from 'vue3-danmaku'
+let yellow_triangle = require("../assets/yellow_triangle.png")
+let red_triangle = require("../assets/red_triangle.png")
+let blue_triangle = require("../assets/blue_triangle.png")
+let warning = require("../assets/warning.png")
 let data = [
   [117.2, 39.13, { type: 1 }],
   [106.27, 38.47, { type: 2 }],
   [117.27, 31.86, { type: 1 }],
   [117, 36.65, { type: 2 }],
-  [112.53, 37.87, { type: 1 }],
+  [112.53, 37.87, { type: 3 }],
   [121.48, 31.22, { type: 2 }],
   [102.73, 25.04, { type: 1 }],
   [111.65, 40.82, { type: 2 }],
@@ -34,17 +44,22 @@ let data = [
   [104.06, 30.67, { type: 1 }],
   [104.94, 30.57, { type: 2 }],
 ]
+// 定义服务中心  小区  和报警三个图
 let icon = new AMap.Icon({
   size: new AMap.Size(60, 60),
-  image: 'http://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+  image: yellow_triangle,
   // imageOffset: new AMap.Pixel(0, -60),  // 图像相对展示区域的偏移量，适于雪碧图等
-  // imageSize: new AMap.Size(40, 50)   // 根据所设置的大小拉伸或压缩图片
+  imageSize: new AMap.Size(40, 50)   // 根据所设置的大小拉伸或压缩图片
 });
 let icon1 = new AMap.Icon({
   size: new AMap.Size(60, 60),
-  image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload2007.cnool.net%2Ffiles2016%2F20200817%2F20200817194829564.gif&refer=http%3A%2F%2Fupload2007.cnool.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663827683&t=82909d7585aa9afb561805849da0c492',
-  // imageOffset: new AMap.Pixel(0, -60),  // 图像相对展示区域的偏移量，适于雪碧图等
-  imageSize: new AMap.Size(40, 50)   // 根据所设置的大小拉伸或压缩图片
+  image: red_triangle,
+  imageSize: new AMap.Size(40, 50)
+});
+let icon2 = new AMap.Icon({
+  size: new AMap.Size(60, 60),
+  image: blue_triangle,
+  imageSize: new AMap.Size(40, 50)
 });
 
 let lnglats = [
@@ -60,17 +75,13 @@ let lnglats = [
   [125.35, 43.88],
   [104.06, 30.67],
   [104.94, 30.57],
-
-
-
-
 ];
 //初始化地图
 const mapInit = () => {
   var map = new AMap.Map("container", {
     // zoom: 3.9, //初始化地图级别
     resizeEnable: true,
-    mapStyle: "amap://styles/fcfe27bbf3be954fccb642c86081a123",//地图的背景颜色
+    mapStyle: "amap://styles/darkblue",//地图的背景颜色
     // center: [105.34, 36.312316],
   });
 
@@ -79,15 +90,21 @@ const mapInit = () => {
   //遍历生成多个标记点
   for (var i = 0, marker; i < data.length; i++) {
     let arr: any = [data[i][0], data[i][1]]
+    let type = data[i][2].type
     marker = new AMap.Marker({
-      icon: data[i][2].type == 1 ? icon : icon1,
+      icon: type == 1 ? icon : type == 2 ? icon1 : icon2,
       position: arr,
       map: map,
     });
-    
+
     marker.setLabel({
       offset: new AMap.Pixel(1, 0), //设置文本标注偏移量
-      content: '<div>' + "劳资天下第一" + '</div>', //设置文本标注内容
+      content: `  ${`<div 
+      class=${type == 1 ? 'mapYellowTitleBox' : type == 2 ? 'mapRedTitleBox' : 'mapBlueTitleBox'}>`} 
+      ${`<div class=${type == 1 ? 'mapYellowTitle' : type == 2 ? 'mapRedTitle' : 'mapBlueTitle'}>`}
+      &nbsp;<img src=${warning} class="warning">&nbsp;劳资天下第一&nbsp;
+      ${'</div>'}
+      </div>`, //设置文本标注内容
       direction: 'top', //设置文本标注方位
     })
   }
@@ -101,22 +118,21 @@ const mapInit = () => {
   var overlaysList = map.getAllOverlays('polygon');//获取多边形图层
   map.setFitView(overlaysList);
 }
-
-
-
-
-
 const danmus = ref([{ avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'a', text: 'aaa' }, { avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'b', text: 'bbb' }])
 const danmakuRef = ref(null)
+// 子组件所有的参数
+let show = ref(false)
 defineComponent({
   Drawer
 })
+const aaaaa = () => {
+  show.value = true
+}
 onMounted(() => {
   mapInit();
   // danmakuRef.value.play()
   // createSocket('ws://172.18.14.253:8007/dev-server/262/2p50atvb/websocket', (res) => {
   //   console.log(res);
-
   // })
 });
 </script>
@@ -125,12 +141,172 @@ onMounted(() => {
   z-index: 9999;
 }
 
-.amap-marker-label {
-  padding: 2px 6px;
-  border-radius: 5px;
-  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, 0.5);
-  text-align: center;
-  font-size: 14px;
-  border: 0;
+.titleBox {
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  z-index: 9999;
+  background-color: rgba(0, 0, 1, .5);
+
+  .title {
+    text-align: center;
+    color: white;
+    height: 90px;
+    line-height: 100px;
+    font-size: 32px;
+    margin-top: 20px;
+    background: url('../assets/titleBg.png');
+    background-size: 100%;
+  }
+}
+
+#container {
+  .amap-marker-label {
+    border: 0 none;
+    padding: 0;
+    background: transparent;
+    line-height: normal;
+    z-index: 9999;
+  }
+
+  // 红色报警得
+  .mapRedTitleBox {
+    border: 0 none;
+    background-color: #fff;
+    white-space: nowrap;
+    border-radius: 5px;
+    background: url('@/assets/red.png') no-repeat;
+    background-size: 100%;
+    background-position: center;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mapRedTitle {
+    background: url('@/assets/redBg.png') no-repeat;
+    background-position: center;
+    background-size: 100%;
+    white-space: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin: 4px;
+    box-sizing: border-box;
+  }
+
+  // 蓝色
+  .mapBlueTitleBox {
+    border: 0 none;
+    background-color: #fff;
+    white-space: nowrap;
+    border-radius: 5px;
+    background: url('@/assets/blue.png') no-repeat;
+    background-size: 100%;
+    background-position: center;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border: 0 none;
+    // background-color: #fff;
+    // white-space: nowrap;
+    // border-radius: 5px;
+    // background: url('@/assets/blue.png') no-repeat;
+    // background-size: 100%;
+    // background-position: center;
+    // font-size: 20px;
+    // padding: 0;
+    // color: white;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+  }
+
+  .mapBlueTitle {
+    background: url('@/assets/blueBg.png') no-repeat;
+    background-position: center;
+    background-size: 100%;
+    white-space: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin: 4px;
+    box-sizing: border-box;
+    // padding: 30px 14px;
+    // background: url('@/assets/blueBg.png') no-repeat;
+    // background-position: center;
+    // background-size: 100%;
+    // white-space: inherit;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+  }
+
+  // 黄色
+  .mapYellowTitleBox {
+    border: 0 none;
+    background-color: #fff;
+    white-space: nowrap;
+    border-radius: 5px;
+    background: url('@/assets/yellow.png') no-repeat;
+    background-size: 100%;
+    background-position: center;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+  .mapYellowTitle {
+    background: url('@/assets/yellowBg.png') no-repeat;
+    background-position: center;
+    background-size: 100%;
+    white-space: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin: 4px;
+    box-sizing: border-box;
+  }
+}
+
+.warning {
+  width: 20px;
+  height: 20px;
+  -webkit-animation: scaleout 1s infinite ease-in-out;
+  animation: scaleout 1s infinite ease-in-out;
+}
+
+@-webkit-keyframes scaleout {
+  0% {
+    -webkit-transform: scale(1.0)
+  }
+
+  100% {
+    -webkit-transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes scaleout {
+  0% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+
+  100% {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    opacity: 0;
+  }
 }
 </style>
