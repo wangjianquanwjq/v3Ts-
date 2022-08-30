@@ -1,14 +1,16 @@
 <template>
-
-  <div style="width:100%;height:100vh" id="container">
-    <div class="titleBox">
-      <div class="title" @click="aaaaa">
-        劳资是天下第一大屏
+  <ScreenAdapter>
+    <div style="width:100%;height:100%" id="container">
+      <div class="titleBox">
+        <div class="title" @click="aaaaa">
+          劳资是天下第一大屏
+        </div>
       </div>
+      <Drawer :show='show' />
     </div>
-    <Drawer :show='show' />
-    <!-- 弹幕 -->
-    <!-- <vue-danmaku v-model:danmus="danmus" ref="danmakuRef" use-slot loop :fontSize="50" extraStyle="color:red"
+  </ScreenAdapter>
+  <!-- 弹幕 -->
+  <!-- <vue-danmaku v-model:danmus="danmus" ref="danmakuRef" use-slot loop :fontSize="50" extraStyle="color:red"
       style="height:100vh; width:100wh">
       <template slot="dm" v-slot:dm="{ index, danmu }">
         <div>
@@ -16,11 +18,10 @@
         </div>
       </template>
     </vue-danmaku> -->
-  </div>
-
 </template>
 
 <script lang="ts" setup>
+import ScreenAdapter from "@/components/ScreenAdapter.vue";
 import { isConditional } from '@babel/types';
 import { onMounted, ref, reactive, defineComponent } from 'vue'
 import Drawer from "@/components/Drawer.vue";
@@ -118,16 +119,17 @@ const mapInit = () => {
   var overlaysList = map.getAllOverlays('polygon');//获取多边形图层
   map.setFitView(overlaysList);
 }
-const danmus = ref([{ avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'a', text: 'aaa' }, { avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'b', text: 'bbb' }])
-const danmakuRef = ref(null)
 // 子组件所有的参数
 let show = ref(false)
 defineComponent({
   Drawer
 })
 const aaaaa = () => {
-  show.value = true
+  show.value = !show.value
 }
+// 弹幕----------------------------------------------
+const danmus = ref([{ avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'a', text: 'aaa' }, { avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', name: 'b', text: 'bbb' }])
+const danmakuRef = ref(null)
 onMounted(() => {
   mapInit();
   // danmakuRef.value.play()
@@ -139,6 +141,13 @@ onMounted(() => {
 <style lang="less">
 .vue-danmaku .danmus .dm.move {
   z-index: 9999;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background-color: #303133;
+  overflow: hidden;
 }
 
 .titleBox {
